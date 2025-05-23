@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap');
+@import url("./styles/input.css");
+@import url("./styles/button.css");
+@import url("./styles/modal.css");
+@import url("./styles/notifications.css");
+@import url("./styles/table.css");
+@import url("./styles/tree.css");
+@import url("./styles/card.css");
+@import url("./styles/collapse.css");
+@import url("./styles/datepicker.css");
+@import url("./styles/canvas_pdf.css");
+@import url("./styles/popover.css");
+@import url("./styles/segmented.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+button {
+    outline: none !important;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.font-blue,
+.ant-form-item.font-blue .ant-form-item-label>label {
+    color: var(--primary);
+}
+
+.tooltip__custom {
+    width: 100%;
+    max-width: 250px;
+}
+
+.border-primary {
+    border-color: var(--primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.bg-primary-darken {
+    background-color: var(--primary-darken) !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+:root {
+    --background-primary: #790d25;
+    --background-secondary: #ffff00;
+    --background-primary-darken: #790d25;
+    --primary: #790d25;
+    --primary-darken: #790d25;
+    --danger: #BC3838;
+    --text: #54607A;
+    --text-muted: #CCCCCC;
+    --background-gradient: linear-gradient(145deg, rgba(121,13,37,1) 60%, rgba(255,255,255,1) 50%)
+}
+
+body.app {
+    overflow: hidden;
+}
+
+.app__main-content {
+    overflow-y: scroll;
+    min-height: 92vh;
+    max-height: 92vh;
+}
+
+.scrollable {
+    overflow-y: scroll;
+    max-height: 400px;
+    width: 100%;
+}
+
+.app__main-content::-webkit-scrollbar,
+.app__main-content::-webkit-scrollbar-track,
+.scrollable::-webkit-scrollbar,
+.scrollable::-webkit-scrollbar-track {
+    width: 8px;
+    background-color: transparent;
+}
+
+.app__main-content::-webkit-scrollbar-thumb,
+.scrollable::-webkit-scrollbar-thumb {
+    width: 8px;
+    background-color: var(--background-primary-darken);
+    border-radius: 15px;
+}
+
+.card__container {
+    width: 100%;
+    max-width: 650px;
+}
+
+.card__container-lg {
+    max-width: 900px;
+}
+
+.card__container-xl {
+    max-width: 1400px;
+}
+
+/*Editable cell hover effect*/
+.editable-row:hover .editable-cell-value-wrap {
+    padding: 2px 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+}
+
+/*CAMBIO DE ORDEN BOTONES*/
+.ant-form.ant-form-vertical .my-10.flex.justify-between.w-full,
+.ant-form.ant-form-vertical .w-full.flex.justify-between.gap-5,
+.ant-form.ant-form-vertical .flex.justify-end.w-full.mb-8.gap-8 {
+    flex-direction: row-reverse;
+}
+
+.ant-form.ant-form-vertical .flex.justify-end.w-full.mb-8.gap-8 {
+    justify-content: flex-start;
+}
+
+ol.list-decimal-bold > li::marker{
+    font-weight: bold;
+    margin-right: 0.5rem;
+} 
+
+.grid-columns-autofit {
+    /**
+    * User input values.
+   */
+    --grid-layout-gap: 10px;
+    --grid-column-count: 3;
+    --grid-item--min-width: 100px;
+
+    /**
+   * Calculated values.
+   */
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+    grid-gap: var(--grid-layout-gap);
+}
+
+.grid-columns-autofit.grid-scrollable {
+    /* Container adjust height for scroll */
+    max-height: 600px;
+    min-height: 600px;
+    overflow-y: scroll;
+}
+
+
+.grid-columns-autofit.grid-scrollable:-webkit-scrollbar-track,
+.grid-columns-autofit.grid-scrollable:-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+}
+
+.grid-columns-autofit.grid-scrollable:-webkit-scrollbar-thumb {
+    width: 8px;
+    background-color: var(--background-primary-darken);
+    border-radius: 15px;
+}
+
+@media screen and (max-width: 767.96px){
+    .sm-bg-primary-gradient {
+        background: var(--background-gradient);
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .grid-columns-autofit {
+        /**
+        * User input values.
+       */
+        --grid-layout-gap: 10px;
+        --grid-column-count: 2;
+        --grid-item--min-width: 200px;
+    
+        /**
+       * Calculated values.
+       */
+        --gap-count: calc(var(--grid-column-count) - 1);
+        --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+        --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+    
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+        grid-gap: var(--grid-layout-gap);
+    }
+    
+}
+
+@media screen and (max-width: 600px) {
+
+    .app__main-content::-webkit-scrollbar,
+    .app__main-content::-webkit-scrollbar-track {
+        width: 7px;
+        height: 7px;
+    }
+
+    .app__main-content::-webkit-scrollbar-thumb {
+        width: 7px;
+    }
+}

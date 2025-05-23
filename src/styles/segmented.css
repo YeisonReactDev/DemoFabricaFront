@@ -1,0 +1,8 @@
+.segmented__centered .ant-segmented-item {
+    margin: 0 !important;
+}
+
+.segmented__centered .ant-segmented-item-label {
+    min-height: auto !important;
+    padding: .5rem !important;
+}

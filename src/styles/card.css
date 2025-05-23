@@ -1,0 +1,11 @@
+.card__customPadding .ant-card-body {
+    @media screen and (max-width: 580px) {
+        padding: 8px;
+    }
+}
+
+.card__customPadding-lg .ant-card-body {
+    @media screen and (max-width: 580px) {
+        padding: 8px 24px;
+    }
+}

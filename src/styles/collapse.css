@@ -1,0 +1,8 @@
+.ant-collapse.collapse-header-sticky>.ant-collapse-item > .ant-collapse-header {
+    position: sticky;
+    top: 0;
+    background: #F8F8F8;
+    z-index: 10;
+    border-bottom: 1px solid #EEE;
+    box-shadow: 0 4px 4px #33333310;
+}

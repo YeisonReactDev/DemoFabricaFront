@@ -1,0 +1,179 @@
+/*INPUTS LABELS STYLE*/
+.ant-form-item-label>label,
+.ant-checkbox+span,
+span.ant-radio+* {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+    text-transform: uppercase;
+    font-weight: 600 !important;
+    font-size: 1rem;
+}
+
+/* TEXT INPUT STYLE */
+.ant-form-item input:not([disabled], :has(.ant-input-affix-wrapper)),
+.ant-form-item .ant-select:not(.ant-select-disabled) .ant-select-selector,
+.ant-form-item textarea:not(.ant-input-disabled),
+.ant-picker,
+.ant-form-item .ant-input-affix-wrapper,
+.ant-form-item .ant-input-affix-wrapper-disabled {
+    background-color: rgb(249 250 251 / var(--tw-bg-opacity)) !important;
+}
+
+.ant-form-item input:not(:has(.ant-input-affix-wrapper)),
+.ant-form-item .ant-select:not(.ant-select-auto-complete) .ant-select-selector,
+.ant-form-item textarea,
+.ant-picker,
+.ant-form-item .ant-input-affix-wrapper-disabled {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.ant-form-item .ant-select:not(.ant-select-multiple),
+.ant-form-item .ant-input-affix-wrapper:not(.ant-input-textarea-affix-wrapper) {
+    min-height: 40px;
+    max-height: 40px;
+}
+
+.ant-picker {
+    padding: 0 0.5rem;
+    width: 100%;
+}
+
+.ant-form-item .ant-select:not(.ant-tree-select, .ant-select-auto-complete, .ant-select-multiple) .ant-select-selector {
+    padding: 0.5rem 0.75rem;
+    min-height: 40px;
+    max-height: 40px;
+}
+
+/* .ant-form-item-control-input-content{
+    min-height: 40px;
+} */
+
+.ant-input-prefix {
+    padding-left: 11px;
+}
+
+
+/* INPUT SEARCH STYLE */
+
+.ant-form-item .ant-input-search button {
+    min-height: 40px;
+    max-height: 40px;
+    border-radius: 0 0.75rem 0.75rem 0 !important;
+    max-height: 100% !important;
+}
+
+.ant-form-item .ant-input-search .ant-input-affix-wrapper {
+    border-radius: 0.75rem 0 0 0.75rem !important;
+}
+
+/* .ant-form-item .ant-input-affix-wrapper {
+    padding: 0px;
+} */
+
+.ant-form-item .ant-input-search .ant-input-group-addon {
+    background: transparent
+}
+
+
+/* SELECT SEARCH */
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input {
+    height: 100%;
+}
+
+.ant-select-selection-placeholder {
+    z-index: 10;
+}
+
+/* INPUT NUMBER */
+
+.custom-inputNumber input {
+    min-height: 43px;
+}
+
+/* SELECT FILTER WITH IMAGES */
+.adjust-height>.ant-select-selector {
+    min-height: 65px !important;
+    margin-bottom: .8rem;
+}
+
+/* SELECT FILTER WITH IMAGES */
+.adjust-height input.ant-input {
+    min-height: 65px !important;
+}
+
+/* SWITCH ADJUST */
+
+button.ant-switch{
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* PERMISOS TREESELECT */
+
+.scrollable__treeselect .ant-select-selector {
+    overflow-y: scroll;
+    max-height: 400px;
+    width: 100%;
+}
+
+.scrollable__treeselect .ant-select-selector{
+    max-height: 300px;
+}
+
+.scrollable__treeselect .ant-select-selector::-webkit-scrollbar,
+.scrollable__treeselect .ant-select-selector::-webkit-scrollbar-track
+ {
+    width: 8px;
+    background-color: transparent;
+}
+
+.scrollable__treeselect .ant-select-selector::-webkit-scrollbar-thumb
+ {
+    width: 8px;
+    background-color: var(--background-primary-darken);
+    border-radius: 15px;
+}
+
+/* zindex for dropdown */
+
+.ant-tabs-dropdown {
+    z-index: 1200;
+}
+
+/* UTILITY CLASS FOR SELECTOR RADIUS */
+
+.select-rounded-r-none .ant-select-selector {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.select-rounded-l-none .ant-select-selector {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.select-height-multiple,
+.select-height-multiple .ant-select-selector {
+    min-height: 45px !important;
+    max-height: 45px !important;
+}
+
+.ant-form-item-has-error ~ .ant-form-item .select-suffix {
+    margin-bottom: 1.4rem;
+}
+
+/* ADJUST DYNAMIC LABEL COLOR */
+
+.ant-form-item .ant-form-item-label.text-white > label {
+    color: white;
+}
+
+@media screen and (max-width: 600px) {
+
+    .scrollable__treeselect .ant-select-selector{
+        max-height: 200px;
+    }
+    
+}

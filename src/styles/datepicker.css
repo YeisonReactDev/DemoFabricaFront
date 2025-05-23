@@ -1,0 +1,39 @@
+.ant-picker-panel-container {
+    .ant-picker-presets {
+        min-height: 25rem !important;
+    }
+
+    @media (max-width: 800px) {
+        overflow: scroll !important;
+        max-height: 400px;
+        height: 100%;
+
+        .ant-picker-panel-layout {
+            flex-direction: column !important;
+
+            .ant-picker-presets {
+                max-width: 100% !important;
+                min-height: 10rem !important;
+            }
+
+            .ant-picker-panels,
+            .ant-picker-datetime-panel {
+                flex-direction: column !important;
+            }
+        }
+    }
+}
+
+@media(max-width: 576px) {
+    .ant-picker-panels {
+        flex-direction: column;
+    }
+
+    .ant-picker-panel:nth-child(2) {
+        display: none;
+    }
+
+    .ant-picker-panel:nth-child(1) button {
+        visibility: visible !important;
+    }
+}
