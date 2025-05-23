@@ -51,11 +51,11 @@ body {
 }
 
 :root {
-    --background-primary: #790d25;
+    --background-primary: #5766a8;
     --background-secondary: #ffff00;
-    --background-primary-darken: #790d25;
-    --primary: #790d25;
-    --primary-darken: #790d25;
+    --background-primary-darken: #5766a8;
+    --primary: #344697;
+    --primary-darken: #5766a8;
     --danger: #BC3838;
     --text: #54607A;
     --text-muted: #CCCCCC;

@@ -12,6 +12,8 @@ import PublicLayout from "./layouts/publicLayout";
 
 //configuracion global idioma antd
 import BusquedaCliente from "./pages/BusquedaCliente/index.jsx";
+import RUAF from "./pages/BusquedaCliente/views/RUAF/index.jsx";
+import ADRES from "./pages/BusquedaCliente/views/ADRES/index.jsx";
 
 export const NotFoundRoute = () => {
   const navigate = useNavigate()
@@ -35,6 +37,8 @@ function App() {
           <Routes>
             <Route path="/" element={<PublicLayout />}>
               <Route index element={<BusquedaCliente />} />
+              <Route path="/ruaf" element={<RUAF />} />
+              <Route path="/adres" element={<ADRES />} />
             </Route>
           </Routes>
         </AuthProvider>

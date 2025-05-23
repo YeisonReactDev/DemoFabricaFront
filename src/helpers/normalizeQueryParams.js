@@ -1,0 +1,1 @@
+export const normalizeQueryParams = (str) => str?.replace(/\s/g, "+") || ""

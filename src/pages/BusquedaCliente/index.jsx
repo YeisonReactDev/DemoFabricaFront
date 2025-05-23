@@ -1,31 +1,69 @@
-import { Button, Card, DatePicker, Form, Input, Select, Table, Tag } from 'antd'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { searchCatalog } from '../../redux/common/redux'
-import { useCreateClienteMutation, useGetByIdClienteQuery } from './redux/api'
-import { useNotification } from '../../hooks/useNotification'
+import { Button, Card, DatePicker, Form, Input, notification, Select, Table, Tag } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import dayjs from 'dayjs'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { IoMdEye } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { useNotification } from '../../hooks/useNotification'
+import { searchCatalog } from '../../redux/common/redux'
+import { useCreateClienteMutation, useGetByIdClienteQuery } from './redux/api'
+
+const CardSystemType = ({
+  name, link, title, NumeroDocumento, IdEmpresa
+}) => {
+  const navigate = useNavigate()
+
+  const handleGoTo = useCallback(() => {
+    return navigate(`${link}?id=${NumeroDocumento}&idempresa=${IdEmpresa}`)
+  }, [link, NumeroDocumento, IdEmpresa])
+
+  return (
+    <Card
+      hoverable
+      className='w-full h-full group'
+      style={{ maxHeight: 300 }}
+      onClick={handleGoTo}
+    >
+      <div className='w-full h-full flex flex-col justify-center items-center gap-2'>
+        <h3 className='text-xl text-center font-blue mb-3'>{name}</h3>
+        <span className='text-base text-center mb-3'>Ver información del {title}</span>
+        <Button
+          type='primary'
+          className='disable-custom'
+          icon={<IoMdEye />}
+          onClick={handleGoTo}
+        >
+          Ver
+        </Button>
+      </div>
+    </Card>
+  )
+}
 
 export default () => {
 
   const dispatch = useDispatch()
   const [form] = useForm()
+
   const [NumeroDocumento, setNumeroDocumento] = useState();
   const [IdEmpresa, setIdEmpresa] = useState();
 
-  const {empresas, loadingempresas} = useSelector(state => state.common)
+  const { empresas, loadingempresas } = useSelector(state => state.common)
 
-  const [createClient, {isLoading, data:result, error}] = useCreateClienteMutation();
-  const {data, isFetching, isError, refetch} = useGetByIdClienteQuery({
+  const [createClient, { isLoading, data: result, error }] = useCreateClienteMutation();
+  const { data, isFetching, isError, refetch } = useGetByIdClienteQuery({
     IdEmpresa,
     NumeroDocumento,
   }, {
     skip: !IdEmpresa || !NumeroDocumento
   });
+  
+  const notification = useNotification(result?.msg, null)
+
 
   const empresasOptions = useMemo(() => {
-    if(!empresas || empresas?.length <= 0){
+    if (!empresas || empresas?.length <= 0) {
       return []
     }
 
@@ -35,20 +73,76 @@ export default () => {
     }))
   })
 
+  const systemTypes = useMemo(() => ({
+    ruaf: {
+      name: "RUAF",
+      title: "Registro Único de Afiliados",
+      link: "/ruaf"
+    },
+    adres: {
+      name: "ADRES",
+      title: "Administradora de los Recursos del Sistema General de Seguridad Social en Salud",
+      link: "/adres"
+    },
+  }))
+  const dataFormatted = useMemo(() => {
+    if (!data || data?.length <= 0) {
+      return {
+        result: {},
+        results: [],
+        views: []
+      }
+    }
+
+    const results = [data?.result]
+    const views = Object.entries(data?.systems)?.reduce((p, entry) => {
+
+      const [key, value] = entry
+      console.log({entry})
+      if (!value) {
+        return p
+      }
+
+      const systemKeyValue = systemTypes?.[key]
+
+      p.push(systemKeyValue)
+      return p
+    }, [])
+
+    return {
+      result: data?.result,
+      results,
+      views
+    }
+
+  }, [data])
+
   const handleClear = useCallback(() => {
     setIdEmpresa(null)
     setNumeroDocumento(null)
   })
 
   const handleSubmit = useCallback((values) => {
+
+    if (values?.NumeroDocumento == NumeroDocumento) {
+      refetch()
+      return;
+    }
+
     createClient({
       ...values,
       FechaExpedicion: dayjs(values?.FechaExpedicion)?.format("YYYY-MM-DD")
     })
-    .finally(() => {
-      setNumeroDocumento(values?.NumeroDocumento)
-      setIdEmpresa(values?.IdEmpresa)
-    })
+      .unwrap()
+      .catch((err) => {
+        if (err?.data?.alreadyExists) {
+          notification.notificationInfo("Persona ya Registrada", "La persona ya se encuentra registrada en el sistema")
+        }
+      })
+      .finally(() => {
+        setNumeroDocumento(values?.NumeroDocumento)
+        setIdEmpresa(values?.IdEmpresa)
+      })
   })
 
   const statusColumnInfo = useMemo(() => ({
@@ -65,7 +159,7 @@ export default () => {
       color: "volcano"
     },
   }))
-   const columns = useMemo(() => [
+  const columns = useMemo(() => [
     {
       title: 'NumeroDocumento',
       dataIndex: 'NumeroDocumento',
@@ -91,115 +185,142 @@ export default () => {
     },
   ]);
 
-  useNotification(result?.msg, error?.data?.msg)
+  useEffect(() => {
+    if (IdEmpresa) {
+      localStorage.setItem("companyId", IdEmpresa)
+    }
+    else {
+      localStorage.removeItem("companyId")
+    }
+
+    /* return () => {
+      localStorage.removeItem("companyId")
+    } */
+  }, [IdEmpresa])
+
 
   useEffect(() => {
-    dispatch(searchCatalog({endpoint: "empresas"}))
+    dispatch(searchCatalog({ endpoint: "empresas" }))
     return () => {
       // handleClear()
     }
   }, []);
 
   return (
-    <div className='w-[100vw] h-[100vh] flex justify-center items-center'>
-      <Card style={{maxWidth: 900}}>
-        <Form
+    <>
+      <Form
         form={form}
         name='cliente'
         layout='vertical'
         onFinish={handleSubmit}
         className='w-full'
-        >
-          <div className='w-full grid grid-cols-12 gap-3'>
-            <Form.Item
-              className="mb-2 col-span-3"
-              label="Empresa"
-              name="IdEmpresa"
-              rules={[
-                { required: true, message: "Este campo es obligatorio." },
-              ]}
-            >
-              <Select
-                allowClear
-                loading={loadingempresas}
-                placeholder="Seleccione la empresa"
-                options={empresasOptions}
-                filterOption
-                showSearch
-                optionFilterProp={"label"}
-              />
-            </Form.Item>
-            <Form.Item
-              className="mb-2 col-span-3"
-              label="Tipo Documento"
-              name="TipoDocumento"
-              rules={[
-                { required: true, message: "Este campo es obligatorio." },
-              ]}
-            >
-              <Input
-                allowClear
-                placeholder="Tipo de documento de la persona"
-              />
-            </Form.Item>
-            <Form.Item
-              className="mb-2 col-span-3"
-              label="N. Documento"
-              name="NumeroDocumento"
-              rules={[
-                { required: true, message: "Este campo es obligatorio." },
-              ]}
-            >
-              <Input
-                allowClear
-                placeholder="Número de documento de la persona"
-              />
-            </Form.Item>
-            <Form.Item
-              className="mb-2 col-span-3"
-              label="Fecha Expedición"
-              name="FechaExpedicion"
-              rules={[
-                { required: true, message: "Este campo es obligatorio." },
-              ]}
-            >
-              <DatePicker
-                placeholder="Seleccione la fecha"
-              />
-            </Form.Item>
-          </div>
-          <div className='mt-4 flex justify-end w-full gap-4'>
-            <Button
-              loading={isLoading}
-              htmlType="submit"
-              className="rounded disable-custom"
-              type="primary"
-            >
-              Crear
-            </Button>
-            <Button
-              loading={isLoading}
-              htmlType="reset"
-              className="rounded disable-custom"
-              danger
-            >
-              Cancelar
-            </Button>
-          </div>
-        </Form>
+      >
+        <div className='w-full grid grid-cols-12 gap-3'>
+          <Form.Item
+            className="mb-2 col-span-3"
+            label="Empresa"
+            name="IdEmpresa"
+            rules={[
+              { required: true, message: "Este campo es obligatorio." },
+            ]}
+          >
+            <Select
+              allowClear
+              loading={loadingempresas}
+              placeholder="Seleccione la empresa"
+              options={empresasOptions}
+              filterOption
+              showSearch
+              optionFilterProp={"label"}
+            />
+          </Form.Item>
+          <Form.Item
+            className="mb-2 col-span-3"
+            label="Tipo Documento"
+            name="TipoDocumento"
+            rules={[
+              { required: true, message: "Este campo es obligatorio." },
+            ]}
+          >
+            <Input
+              allowClear
+              placeholder="Tipo de documento de la persona"
+            />
+          </Form.Item>
+          <Form.Item
+            className="mb-2 col-span-3"
+            label="N. Documento"
+            name="NumeroDocumento"
+            rules={[
+              { required: true, message: "Este campo es obligatorio." },
+            ]}
+          >
+            <Input
+              allowClear
+              placeholder="Número de documento de la persona"
+            />
+          </Form.Item>
+          <Form.Item
+            className="mb-2 col-span-3"
+            label="Fecha Expedición"
+            name="FechaExpedicion"
+            rules={[
+              { required: true, message: "Este campo es obligatorio." },
+            ]}
+          >
+            <DatePicker
+              placeholder="Seleccione la fecha"
+            />
+          </Form.Item>
+        </div>
+        <div className='mt-4 flex justify-end w-full gap-4'>
+          <Button
+            loading={isLoading}
+            htmlType="submit"
+            className="rounded disable-custom"
+            type="primary"
+          >
+            Consultar
+          </Button>
+          <Button
+            loading={isLoading}
+            htmlType="reset"
+            className="rounded disable-custom"
+            danger
+            onClick={handleClear}
+          >
+            Cancelar
+          </Button>
+        </div>
+      </Form>
 
-        {
-          data && (
+      {
+        (data && NumeroDocumento && IdEmpresa) && (
+          <>
             <div className='w-full my-3'>
               <Table
                 columns={columns}
                 loading={isFetching}
-                dataSource={!isError ? [data] : []}
+                dataSource={!isError ? dataFormatted?.results : []}
               />
             </div>
-          )
-        }
-      </Card>
-    </div>
+            <div className='w-full grid grid-cols-12 gap-4'>
+              {
+                dataFormatted?.views?.map(systemType => (
+                  <div className='sm:col-span-6 col-span-12'>
+                    <CardSystemType
+                      {...systemType}
+                      NumeroDocumento={dataFormatted?.result?.NumeroDocumentoEncrypted}
+                      IdEmpresa={dataFormatted?.result?.IdEmpresaEncrypted}
+                    />
+                  </div>
+                ))
+              }
+
+            </div>
+          </>
+        )
+      }
+    </>
   )
 }

@@ -44,7 +44,7 @@ export const clientesSlice = createSlice({
 
     //MATCHERS FOR GET BY ID
     builder.addMatcher(
-      clientesApi.endpoints.getByIdCliente.matchPending,
+      clientesApi.endpoints.GetByIdCliente.matchPending,
       (state) => {
         state.loadingById = true;
         state.errorId = null;
@@ -52,14 +52,14 @@ export const clientesSlice = createSlice({
       }
     );
     builder.addMatcher(
-      clientesApi.endpoints.getByIdCliente.matchFulfilled,
+      clientesApi.endpoints.GetByIdCliente.matchFulfilled,
       (state, { payload }) => {
         state.loadingById = false;
         state.IdDocumento = payload?.IdDocumento;
       }
     );
     builder.addMatcher(
-      clientesApi.endpoints.getByIdCliente.matchRejected,
+      clientesApi.endpoints.GetByIdCliente.matchRejected,
       (state, { payload }) => {
         state.loadingById = false;
       }
