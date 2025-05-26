@@ -1,12 +1,13 @@
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import CardDocumento from '../../components/CardDocumento'
 import TableRender from '../../components/TableRender'
 import { useGetADRESAfiliationsQuery, useGetADRESBasicQuery, useGetADRESPeriodsQuery } from '../../redux/api'
-import CardDocumento from '../../components/CardDocumento'
 
 export default () => {
 
+  const navigate = useNavigate()
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams(location?.search)
 
@@ -111,6 +112,7 @@ export default () => {
           <CardDocumento
             NumeroDocumento={NumeroDocumento}
             IdEmpresa={IdEmpresa}
+            onClick={() => navigate("/")}
           />
         </div>
 

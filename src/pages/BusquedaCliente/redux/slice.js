@@ -4,7 +4,8 @@ import { clientesApi } from "./api";
 export const ID_NAME = "IdCuenta"
 
 const initialState = {
-  IdDocumento: null,
+  NumeroDocumento: null,
+  IdEmpresa: null,
 
   loadingById: false,
   resultCreate: null,
@@ -14,8 +15,11 @@ export const clientesSlice = createSlice({
   name: "clientes",
   initialState,
   reducers: {
-    setIdDocumento: (state, action) => {
-      state.IdDocumento = action.payload;
+    setNumeroDocumento: (state, action) => {
+      state.NumeroDocumento = action.payload;
+    },
+    setIdEmpresa: (state, action) => {
+      state.IdEmpresa = action.payload;
     },
     clearResults: (state, action) => {
       state.resultCreate = null;
@@ -27,10 +31,14 @@ export const clientesSlice = createSlice({
       }
     },
     clearSearchParams: (state, action) => {
-      state.IdDocumento = null;
+      state.NumeroDocumento = null;
+      state.IdEmpresa = null;
     },
-    clearIdDocumento: (state, action) => {
-      state.IdDocumento = null
+    clearNumeroDocumento: (state, action) => {
+      state.NumeroDocumento = null
+    },
+    clearIdEmpresa: (state, action) => {
+      state.IdEmpresa = null
     },
 
   },
@@ -55,7 +63,8 @@ export const clientesSlice = createSlice({
       clientesApi.endpoints.GetByIdCliente.matchFulfilled,
       (state, { payload }) => {
         state.loadingById = false;
-        state.IdDocumento = payload?.IdDocumento;
+        state.NumeroDocumento = payload?.result?.NumeroDocumento;
+        state.IdEmpresa = payload?.result?.IdEmpresa;
       }
     );
     builder.addMatcher(
@@ -95,11 +104,13 @@ export const clientesSlice = createSlice({
 });
 
 export const {
-    clearData,
-    clearIdDocumento,
-    clearResults,
-    clearSearchParams,
-    setIdDocumento
+  clearData,
+  clearNumeroDocumento,
+  clearResults,
+  clearSearchParams,
+  setNumeroDocumento,
+  clearIdEmpresa,
+  setIdEmpresa
 } = clientesSlice.actions;
 
 export default clientesSlice.reducer;

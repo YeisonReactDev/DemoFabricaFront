@@ -1,12 +1,13 @@
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import TableRender from '../../components/TableRender'
-import { useGetRUAFBasicQuery, useGetRUAFHealthQuery, useGetRUAFLaboralRisksQuery, useGetRUAFLayoffsQuery, useGetRUAFPensionsQuery } from '../../redux/api'
+import { useGetRUAFBasicQuery, useGetRUAFFamilyCompensationQuery, useGetRUAFHealthQuery, useGetRUAFLaboralRisksQuery, useGetRUAFLayoffsQuery, useGetRUAFPensionersQuery, useGetRUAFPensionsQuery } from '../../redux/api'
 import CardDocumento from '../../components/CardDocumento'
 
 export default () => {
 
+  const navigate = useNavigate()
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams(location?.search)
 
@@ -170,6 +171,79 @@ export default () => {
     },
   ]);
 
+  const columnsPensioners = useMemo(() => [
+    {
+      title: 'Entidad Pagadora',
+      dataIndex: 'EntidadPagadora',
+      key: 'EntidadPagadora',
+    },
+    {
+      title: 'Entidad Reconocedora',
+      dataIndex: 'EntidadReconocedora',
+      key: 'EntidadReconocedora',
+    },
+    {
+      title: 'Tipo Pensión',
+      dataIndex: 'TipoPension',
+      key: 'TipoPension',
+    },
+    {
+      title: 'Estado',
+      dataIndex: 'Estado',
+      key: 'Estado',
+    },
+    {
+      title: 'Tipo Pensionado',
+      dataIndex: 'TipoPensionado',
+      key: 'TipoPensionado',
+    },
+    {
+      title: 'Fecha Resolución',
+      dataIndex: 'FechaResolucion',
+      key: 'FechaResolucion',
+      render: (v) => <span className="whitespace-nowrap">{dayjs(v)?.format("DD MMM YYYY")}</span>
+    },
+    {
+      title: 'Numero Resolución',
+      dataIndex: 'NumeroResolucion',
+      key: 'NumeroResolucion',
+    },
+  ]);
+
+  const columnsFamilyCompensation = useMemo(() => [
+    {
+      title: 'Administradora',
+      dataIndex: 'Administradora',
+      key: 'Administradora',
+    },
+    {
+      title: 'Fecha Afiliación',
+      dataIndex: 'FechaAfiliacion',
+      key: 'FechaAfiliacion',
+      render: (v) => <span className="whitespace-nowrap">{dayjs(v)?.format("DD MMM YYYY")}</span>
+    },
+    {
+      title: 'Estado Afiliación',
+      dataIndex: 'EstadoAfiliacion',
+      key: 'EstadoAfiliacion',
+    },
+    {
+      title: 'Tipo de Miembro de la Población Cubierta',
+      dataIndex: 'TipoMiembroPoblacion',
+      key: 'TipoMiembroPoblacion',
+    },
+    {
+      title: 'Tipo Afiliado',
+      dataIndex: 'TipoAfiliado',
+      key: 'TipoAfiliado',
+    },
+    {
+      title: 'Municipio Labora',
+      dataIndex: 'MunicipioLabora',
+      key: 'MunicipioLabora',
+    },
+  ]);
+
   return (
     <>
       <div className='w-full px-5 py-3'>
@@ -179,6 +253,7 @@ export default () => {
           <CardDocumento
             NumeroDocumento={NumeroDocumento}
             IdEmpresa={IdEmpresa}
+            onClick={() => navigate("/")}
           />
         </div>
 
@@ -215,6 +290,21 @@ export default () => {
             title='Afiliaciones a Cesantías'
             getQueryHook={useGetRUAFLayoffsQuery}
             columns={columnsLayoffs}
+            queryParams={paramsForQuery}
+            skipCondition={skipCondition}
+          />
+
+          <TableRender
+            title='Pensionados'
+            getQueryHook={useGetRUAFPensionersQuery}
+            columns={columnsPensioners}
+            queryParams={paramsForQuery}
+            skipCondition={skipCondition}
+          />
+          <TableRender
+            title='Afiliaciones a Compensación Familiar'
+            getQueryHook={useGetRUAFFamilyCompensationQuery}
+            columns={columnsFamilyCompensation}
             queryParams={paramsForQuery}
             skipCondition={skipCondition}
           />

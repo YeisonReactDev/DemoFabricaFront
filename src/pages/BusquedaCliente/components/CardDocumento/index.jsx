@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { normalizeQueryParams } from '../../../../helpers/normalizeQueryParams'
 import { useGetByIdClienteQuery } from '../../redux/api'
 
-export default ({ IdEmpresa, NumeroDocumento }) => {
+export default ({ IdEmpresa, NumeroDocumento, onClick = null }) => {
 
     const { data, isFetching, refetch, isError } = useGetByIdClienteQuery({
         IdEmpresa: normalizeQueryParams(IdEmpresa),
@@ -29,6 +29,8 @@ export default ({ IdEmpresa, NumeroDocumento }) => {
         <Card
             className='w-full'
             style={{ maxWidth: 400 }}
+            hoverable={!!onClick}
+            onClick={() => onClick && onClick({NumeroDocumento, IdEmpresa})}
         >
             {
                 isError

@@ -1,4 +1,4 @@
-import { Button, Card, DatePicker, Form, Input, notification, Select, Table, Tag } from 'antd'
+import { Button, Card, DatePicker, Form, Input, Result, Select, Table, Tag } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useNotification } from '../../hooks/useNotification'
 import { searchCatalog } from '../../redux/common/redux'
 import { useCreateClienteMutation, useGetByIdClienteQuery } from './redux/api'
+import { clearIdEmpresa, clearNumeroDocumento } from './redux/slice'
 
 const CardSystemType = ({
   name, link, title, NumeroDocumento, IdEmpresa
@@ -50,6 +51,7 @@ export default () => {
   const [IdEmpresa, setIdEmpresa] = useState();
 
   const { empresas, loadingempresas } = useSelector(state => state.common)
+  const { NumeroDocumento: NumeroDocumentoRedux, IdEmpresa: IdEmpresaRedux } = useSelector(state => state.clientes)
 
   const [createClient, { isLoading, data: result, error }] = useCreateClienteMutation();
   const { data, isFetching, isError, refetch } = useGetByIdClienteQuery({
@@ -58,7 +60,9 @@ export default () => {
   }, {
     skip: !IdEmpresa || !NumeroDocumento
   });
-  
+
+  console.log({ data, IdEmpresa, NumeroDocumento })
+
   const notification = useNotification(result?.msg, null)
 
 
@@ -98,7 +102,7 @@ export default () => {
     const views = Object.entries(data?.systems)?.reduce((p, entry) => {
 
       const [key, value] = entry
-      console.log({entry})
+      console.log({ entry })
       if (!value) {
         return p
       }
@@ -120,6 +124,9 @@ export default () => {
   const handleClear = useCallback(() => {
     setIdEmpresa(null)
     setNumeroDocumento(null)
+    dispatch(clearNumeroDocumento())
+    dispatch(clearIdEmpresa())
+    form?.resetFields()
   })
 
   const handleSubmit = useCallback((values) => {
@@ -197,6 +204,42 @@ export default () => {
       localStorage.removeItem("companyId")
     } */
   }, [IdEmpresa])
+
+
+  // SETTEOS PARA MANTENER CACHE ENTRE VISTAS
+  useEffect(() => {
+    if (!!IdEmpresaRedux && !IdEmpresa) {
+      setIdEmpresa(IdEmpresaRedux)
+      form?.setFieldValue("IdEmpresa", IdEmpresaRedux)
+    }
+  }, [IdEmpresa, IdEmpresaRedux])
+
+  useEffect(() => {
+    if (!!NumeroDocumentoRedux && !NumeroDocumento) {
+      setNumeroDocumento(NumeroDocumentoRedux)
+      form?.setFieldValue("NumeroDocumento", NumeroDocumentoRedux)
+    }
+  }, [NumeroDocumento, NumeroDocumentoRedux])
+
+  // setter for api data into form
+  useEffect(() => {
+    if (dataFormatted?.result?.NumeroDocumento) {
+      for (const key in dataFormatted?.result) {
+        if (Object.prototype.hasOwnProperty.call(dataFormatted?.result, key)) {
+          const value = dataFormatted?.result[key];
+          if (!value) continue;
+
+          if (key?.includes("Fecha")) {
+            const date = dayjs(value)
+            form?.setFieldValue(key, date)
+          }
+          else {
+            form?.setFieldValue(key, value)
+          }
+        }
+      }
+    }
+  }, [dataFormatted])
 
 
   useEffect(() => {
@@ -295,7 +338,7 @@ export default () => {
       </Form>
 
       {
-        (data && NumeroDocumento && IdEmpresa) && (
+        (data && NumeroDocumento && IdEmpresa) ? (
           <>
             <div className='w-full my-3'>
               <Table
@@ -320,6 +363,16 @@ export default () => {
             </div>
           </>
         )
+          : (
+            <div className='w-full h-full flex justify-center items-stretch'>
+              <Result
+                status="info"
+                title="Búsqueda de clientes."
+                subTitle="Ingresa los datos del cliente para consultarlo o generar un registro nuevo"
+
+              />
+            </div>
+          )
       }
     </>
   )

@@ -13,6 +13,8 @@ const ENDPOINTS = {
   getRUAFPensions: "/clientes/ruaf/pensions",
   getRUAFLaboralRisks: "/clientes/ruaf/laboralrisks",
   getRUAFLayoffs: "/clientes/ruaf/layoffs",
+  getRUAFPensioners: "/clientes/ruaf/pensioners",
+  getRUAFFamilyCompensation: "/clientes/ruaf/familycompensation",
 
   // GETTERS -- ADRES
   getADRESBasic: "/clientes/adres/basic",
@@ -31,6 +33,8 @@ export const clientesApi = createApi({
     "GetRUAFPensions",
     "GetRUAFLaboralRisks",
     "GetRUAFLayoffs",
+    "GetRUAFPensioners",
+    "GetRUAFFamilyCompensation",
 
     "GetADRESBasic",
     "GetADRESAfiliations",
@@ -129,6 +133,31 @@ export const clientesApi = createApi({
       providesTags: (result, __, arg) => result ? [{ type: "GetRUAFLayoffs", id: arg?.NumeroDocumento }] : ["GetRUAFLayoffs"],
     }),
 
+    GetRUAFPensioners: builder.query({
+      query: (params) => {
+        return {
+          url: `${ENDPOINTS.getRUAFPensioners}`,
+          params: {
+            NumeroDocumento: params?.NumeroDocumento,
+          },
+        };
+      },
+      keepUnusedDataFor: DEFAULT_TTLS_CACHE,
+      providesTags: (result, __, arg) => result ? [{ type: "GetRUAFPensioners", id: arg?.NumeroDocumento }] : ["GetRUAFPensioners"],
+    }),
+
+    GetRUAFFamilyCompensation: builder.query({
+      query: (params) => {
+        return {
+          url: `${ENDPOINTS.getRUAFFamilyCompensation}`,
+          params: {
+            NumeroDocumento: params?.NumeroDocumento,
+          },
+        };
+      },
+      keepUnusedDataFor: DEFAULT_TTLS_CACHE,
+      providesTags: (result, __, arg) => result ? [{ type: "GetRUAFFamilyCompensation", id: arg?.NumeroDocumento }] : ["GetRUAFFamilyCompensation"],
+    }),
 
     // QUERYS --- ADRES
     GetADRESBasic: builder.query({
@@ -201,6 +230,8 @@ export const {
   useGetRUAFLaboralRisksQuery,
   useGetRUAFLayoffsQuery,
   useGetRUAFPensionsQuery,
+  useGetRUAFPensionersQuery,
+  useGetRUAFFamilyCompensationQuery,
   // -----ADRES
   useGetADRESBasicQuery,
   useGetADRESAfiliationsQuery,
